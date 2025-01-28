@@ -1,0 +1,25 @@
+<div class="surah-grade-container">
+  <div class="row">
+    <div class="col">
+      {{surah}}
+    </div>
+    <div class="col">
+      <div class="col-12">
+        <div class="input-group mb-3">
+          <select class="form-select" id="inputGroupSelect01">
+            <option selected value="0">التقييم</option>
+            <option value="1">جيد</option>
+            <option value="2">جيد جداً</option>
+            <option value="3">ممتاز</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-12">
+        <button (click)="isShowCalendar = !isShowCalendar">التاريخ</button>
+        <mat-card [class.d-none]="isShowCalendar" class="demo-inline-calendar-card">
+          <mat-calendar [(selected)]="selectedDate"></mat-calendar>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

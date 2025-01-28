@@ -1,13 +1,13 @@
 @mixin colors-variation($colors) {
   :root {
     @each $label, $color in $colors {
-      .text-#{$label} {
-        color: #{$color} !important;
-      }
+      --color-#{$label}: #{$color};
     }
 
     @each $label, $color in $colors {
-      --color-#{$label}: #{$color};
+      .text-#{$label} {
+        color: #{$color} !important;
+      }
     }
 
     @each $label, $color in $colors {
@@ -19,18 +19,6 @@
     @each $label, $color in $colors {
       .border-color-#{$label} {
         border-color: #{$color} !important;
-      }
-    }
-
-    @each $label, $color in $colors {
-      .stroke-#{$label} {
-        stroke: #{$color} !important;
-      }
-    }
-
-    @each $label, $color in $colors {
-      .fill-#{$label} {
-        fill: #{$color} !important;
       }
     }
   }

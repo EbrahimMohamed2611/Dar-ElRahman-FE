@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { StudentComponent } from "./components/student/student.component";
-import { SidebarComponent } from "./components/sidebar/sidebar.component";
-import { HeaderComponent } from "./components/header/header.component";
+import { StudentComponent } from "./components/pages/student/student.component";
+import { SidebarComponent } from "./components/layout/sidebar/sidebar.component";
+import { HeaderComponent } from "./components/layout/header/header.component";
+import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    imports: [StudentComponent, SidebarComponent, HeaderComponent]
+    imports: [RouterOutlet, SidebarComponent, HeaderComponent]
 })
 export class AppComponent {
   title = 'Dar-ElRahman';

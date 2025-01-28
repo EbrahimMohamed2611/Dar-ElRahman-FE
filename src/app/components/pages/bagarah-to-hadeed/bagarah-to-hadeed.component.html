@@ -1,0 +1,15 @@
+<h3 class="pt-3 pb-4 px-4 font-bold text-green-10 title">
+  قائمة من البقرة إلى الحديد
+</h3>
+
+<div class="row px-4">
+  @for(surah of quranChapters; track surah){
+  <div class="col-3">
+    <p class="d-flex justify-content-center text-green-10 font-bold surah">
+      {{ surah }}
+    </p>
+  </div>
+  }
+</div>
+
+<!-- <app-surah-grade /> -->

@@ -1,0 +1,25 @@
+.link{
+  font-family: var(--font-family);
+  font-size: .8rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  color: var(--color-green-10);
+  padding-block: .8rem;
+  margin-inline: 1rem;
+  text-decoration: none;
+  text-align: center;
+}
+
+.green-bottom-border{
+  border-block-end: 1.5px solid var(--color-green-20);
+}
+
+.link:hover{
+  scale: 1.02;
+  cursor: pointer;
+}
+
+.sidebar{
+  box-shadow: -15px -12px 9px -18px var(--color-green-20);
+}
