@@ -3,7 +3,7 @@ import { SurahGradeComponent } from './surah-grade/surah-grade.component';
 
 @Component({
   selector: 'app-bagarah-to-hadeed',
-  imports: [],
+  imports: [SurahGradeComponent],
   templateUrl: './bagarah-to-hadeed.component.html',
   styleUrl: './bagarah-to-hadeed.component.scss'
 })

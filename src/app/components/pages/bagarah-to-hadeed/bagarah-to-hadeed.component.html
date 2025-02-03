@@ -4,12 +4,15 @@
 
 <div class="row px-4">
   @for(surah of quranChapters; track surah){
-  <div class="col-3">
-    <p class="d-flex justify-content-center text-green-10 font-bold surah">
-      {{ surah }}
-    </p>
+  <div class="col-3 m-3 p-0">
+    <div class="d-grid justify-content-center align-items-center surah">
+      <div class="container p-0">
+        <span class="d-inline-flex text-green-10 font-bold">{{ surah }}</span>
+      </div>
+      <div class="container p-0">
+        <app-surah-grade />
+      </div>
+    </div>
   </div>
   }
 </div>
-
-<!-- <app-surah-grade /> -->
