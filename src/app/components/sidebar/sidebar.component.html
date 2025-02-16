@@ -1,5 +1,5 @@
 <!-- sidebar.component.html -->
-<div class="list-group list-group-flush">
+<!-- <div class="list-group list-group-flush">
   <button type="button" class="list-group-item list-group-item-action">
     قائمة الكتاب
   </button>
@@ -7,6 +7,41 @@
     قائمة الموظفين
   </button>
   <button type="button" class="list-group-item list-group-item-action">
-    تسجيل الخروج
+    <button >تسجيل خروج</button>
   </button>
+</div> -->
+
+<div class="sidebar">
+  <div class="logo">
+    <img src="assets/imgs/logo.png" alt="Logo" class="logo" />
+    <h2>دار عبد الرحمن</h2>
+  </div>
+  <ul class="menu">
+    <li
+      routerLinkActive="activeLink"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a [routerLink]="['/', AppRoutes.STUDENT]">قائمة الكتاب</a>
+    </li>
+    <li
+      routerLinkActive="activeLink"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a [routerLink]="['/', AppRoutes.TEACHER]">قائمة الموظفين</a>
+    </li>
+    <li><a href="#">قائمة الغياب</a></li>
+    <li><a href="#">موعد سؤال القرآن</a></li>
+    <li><a href="#">قائمة من البقرة للحديد</a></li>
+    <li><a href="#">قائمة من المجادلة للناس</a></li>
+    <li><a href="#">نتائج عمل الموظفين</a></li>
+    <li><a href="#">قائمة الخريجين (النور)</a></li>
+    <li><a href="#">الرسوم الشهرية</a></li>
+    <li><a href="#">مسابقات الأزهر</a></li>
+  </ul>
+  <div class="logout">
+    <a href="#" (click)="authService.logout()">
+      تسجيل الخروج
+      <i class="fas fa-sign-out-alt"></i>
+    </a>
+  </div>
 </div>
