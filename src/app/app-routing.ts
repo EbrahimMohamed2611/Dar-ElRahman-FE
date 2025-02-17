@@ -8,7 +8,7 @@ export const APP_ROUTES: Routes = [
     path: AppRoutes.REGISTRATION,
     canActivate: [publicGuard],
     loadComponent: () =>
-      import('./registration/registration.component').then(
+      import('./components/registration/registration.component').then(
         (c) => c.RegistrationComponent
       )
   },
@@ -16,17 +16,21 @@ export const APP_ROUTES: Routes = [
     path: AppRoutes.LOGIN,
     canActivate: [publicGuard],
     loadComponent: () =>
-      import('./login/login.component').then(
+      import('./components/login/login.component').then(
         (c) => c.LoginComponent
       )
   },
   {
-    path: AppRoutes.STUDENT,
+    path: AppRoutes.HOME,
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./components/student/student.component').then(
-        (c) => c.StudentComponent
-      )
+      import('./components/home/home.component').then(
+        (c) => c.HomeComponent,
+      ),
+    loadChildren: () =>
+      import('./components/home/home-routing').then(
+        (routes) => routes.HOME_CHILDREN_ROUTES,
+      ),
   },
   {
     path: '',

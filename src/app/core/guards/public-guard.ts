@@ -13,7 +13,7 @@ export function publicGuard(
 
   return new Promise(async (resolve, reject) => {
     if (decodedSessionToken && (decodedSessionToken?.exp && decodedSessionToken.exp * 1000 >= Date.now())) {
-      router.navigateByUrl(`/${AppRoutes.STUDENT}`).then();
+      router.navigateByUrl(`/${AppRoutes.HOME}/${AppRoutes.STUDENT}`).then();
       return resolve(false);
     }
     resolve(true);
