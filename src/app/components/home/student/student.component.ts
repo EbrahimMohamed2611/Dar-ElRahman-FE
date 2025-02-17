@@ -37,9 +37,10 @@ export class StudentComponent implements OnInit {
   };
   error: any;
   periods: any[] = [
-    { name: 'first', nameAR: 'الاولى' },
-    { name: 'second', nameAR: 'الثانية' },
-    { name: 'third', nameAR: 'الثالثة' },
+    { name: 'First', nameAR: 'الأولى' },
+    { name: 'Second', nameAR: 'الثانية' },
+    { name: 'Extended', nameAR: 'ممتدة' },
+    { name: 'NOT_DEFINED', nameAR: 'غير معروف' },
   ];
   teachers: any[] = [];
   rings: any[] = [];
@@ -156,6 +157,18 @@ export class StudentComponent implements OnInit {
 
   handleEditClick(student: any) {
     this.student = this.cloneStudent(student);
+    console.log('Filter', student.ring.period);
+
+    this.student.periodName = this.periods
+      .filter((p) => p.nameAR === student.ring.period)
+      .map((p) => p.name)[0];
+
+    if (this.student.maritalStatus === 'يتيم')
+      this.student.maritalStatus = 'ORPHAN';
+    else if (this.student.maritalStatus === 'مُطلق')
+      this.student.maritalStatus = 'DIVORCED';
+    else this.student.maritalStatus = 'NOT_DEFINED';
+
     this.buttonName = 'تعديل';
   }
 
@@ -177,7 +190,7 @@ export class StudentComponent implements OnInit {
       address: student.address,
       motherPhoneNumber: student.motherPhoneNumber,
       maritalStatus: student.maritalStatus,
-      periodName: student.periodName,
+      periodName: student.ring.period,
       ringId: student.ringId,
       joiningDate: student.joiningDate,
       birthDate: student.birthDate,

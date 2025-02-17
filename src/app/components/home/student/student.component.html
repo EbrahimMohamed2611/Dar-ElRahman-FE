@@ -324,7 +324,7 @@
       </thead>
       <tbody>
         @for(row of data; track row.id;){
-        <tr (click)="selectRow(row)">
+        <tr>
           <td>{{ row.id }}</td>
           <td>{{ row.fullName }}</td>
           <td>{{ row.nationalId }}</td>
@@ -370,4 +370,4 @@
         }
       </tbody>
     </table>
-  </div>
+  </div>  

@@ -1,170 +1,231 @@
 import { CommonModule, NgClass } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { TeacherService } from 'src/app/services/teacher/teacher.service';
-import { PeriodService } from 'src/app/services/period/period.service';
-import { StudentService } from 'src/app/services/student/student.service';
-import { RingService } from 'src/app/services/ring/ring.service';
-import * as bootstrap from 'bootstrap'; // Import Bootstrap
-
+import { AppRegexPatterns } from 'src/app/constants/app-regex-patterns';
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-teacher',
-  imports: [NgClass, FormsModule, CommonModule],
+  imports: [NgClass, FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './teacher.component.html',
   styleUrl: './teacher.component.css',
 })
 export class TeacherComponent implements OnInit {
-  @ViewChild('studentModal') studentModal!: ElementRef; // Reference to the modal
+  @ViewChild('teachertModal') teacherModal!: ElementRef; // Reference to the modal
+  private modalInstance: Modal | null = null;
+
   data: any[] = [];
-  student = {
+  rowSelected: any;
+  buttonName = 'إضافة';
+  teacher = {
+    id: null,
     fullName: '',
     nationalId: '',
-    motherName: '',
+    phoneNumber: '',
     address: '',
-    motherPhoneNumber: '',
-    maritalStatus: 'غير معروف',
-    periodName: '',
-    ringId: 1,
-    joiningDate: '',
     birthDate: '',
-    fatherPhoneNumber: '',
-    fatherEmailAddress: '',
+    maritalStatus: 'غير معروف',
+    joiningDate: '',
+    exitDate: '',
+    profession: '',
+    qualificationDate: '',
+    educationalQualification: '',
+    outOfWork: '',
+    emailAddress: '',
   };
   error: any;
-  periods: any[] = [
-    { name: 'first', nameAR: 'الاولى' },
-    { name: 'second', nameAR: 'الثانية' },
-    { name: 'third', nameAR: 'الثالثة' },
-  ];
+  deleteError: any;
   teachers: any[] = [];
-  rings: any[] = [];
+
+  teacherForm: FormGroup | undefined;
   constructor(
     private teacherService: TeacherService,
-    // private periodService: PeriodService,
-    private ringService: RingService,
-    private studentService: StudentService
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.getAllStudents();
-
-    this.teacherService.getAllTeachers().subscribe(
-      (response) => {
-        console.log('Teachers response', response);
-        this.teachers = response.data;
-      },
-      (error) => {
-        console.error('Teachers failed', error);
-      }
-    );
-
-    this.ringService.getAllRings().subscribe(
-      (response) => {
-        console.log('Rings response', response);
-        this.rings = response.data;
-      },
-      (error) => {
-        console.error('Rings failed', error);
-      }
-    );
+    this.getAllTeachers();
+    this.buildTeacherForm();
   }
 
-  rowSelected: any;
-
-  private getAllStudents() {
-    this.studentService.getAllStudent().subscribe(
+  private getAllTeachers() {
+    this.teacherService.getAllTeachers().subscribe(
       (response: any) => {
-        console.log('Student response', response);
+        console.log('Teacher response', response);
         this.data = response.data;
         this.rowSelected = this.data[0];
       },
       (error) => {
-        console.error('Student failed', error);
+        console.error('Teacher failed', error);
       }
     );
+  }
+
+  buildTeacherForm() {
+    this.teacherForm = this.fb.group({
+      id: [null],
+      fullName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ],
+      ],
+      nationalId: [
+        '',
+        [Validators.pattern(AppRegexPatterns.NATIONAL_ID_PATTERN)],
+      ],
+      phoneNumber: [
+        '',
+        [Validators.pattern(AppRegexPatterns.EGP_MOBILE_PATTERN)],
+      ],
+      emailAddress: ['', [Validators.pattern(AppRegexPatterns.EMAIL_PATTERN)]],
+      address: [''],
+      birthDate: [''],
+      maritalStatus: [''],
+      profession: [''],
+      educationalQualification: [''],
+      qualificationDate: [''],
+      joiningDate: [''],
+      outOfWork: [false],
+      exitDate: [''],
+      deleted: [false],
+    });
   }
   selectRow(row: any) {
     this.rowSelected = row;
   }
 
   onSubmit() {
-    console.log(this.student);
-    this.studentService.addStudent(this.student).subscribe(
-      (response) => {
-        console.log(response);
-        this.getAllStudents();
+    if (this.buttonName === 'إضافة') {
+      this.teacherService.addTeacher(this.teacherForm?.value).subscribe(
+        (response) => {
+          this.getAllTeachers();
+          this.closeModal();
+        },
+        (error) => {
+          this.error = error;
+        }
+      );
+    } else {
+      console.log('Edit Request', this.teacherForm?.value);
 
-        this.closeModal(); // Close the modal after successful submission
+      this.teacherService.updateTeacher(this.teacherForm?.value).subscribe(
+        (response) => {
+          this.getAllTeachers();
+          this.closeModal();
+        },
+        (error) => {
+          this.error = error;
+        }
+      );
+    }
+  }
+
+  reset() {
+    this.teacher = {
+      id: null,
+      fullName: '',
+      nationalId: '',
+      phoneNumber: '',
+      address: '',
+      birthDate: '',
+      maritalStatus: 'غير معروف',
+      joiningDate: '',
+      exitDate: '',
+      profession: '',
+      educationalQualification: '',
+      qualificationDate: '',
+      outOfWork: '',
+      emailAddress: '',
+    };
+  }
+
+  handleAddClick() {
+    this.buildTeacherForm();
+  }
+  editTeacher(student: any) {
+    this.teacher = this.cloneTeacher(student);
+    let currentMaritalStatus = null;
+    if (this.teacher.maritalStatus === 'يتيم') currentMaritalStatus = 'ORPHAN';
+    else if (this.teacher.maritalStatus === 'مُطلق')
+      currentMaritalStatus = 'DIVORCED';
+    else currentMaritalStatus = 'NOT_DEFINED';
+    console.log(this.teacher);
+
+    this.teacherForm?.patchValue({
+      id: this.teacher.id,
+      fullName: this.teacher.fullName,
+      nationalId: this.teacher.nationalId,
+      phoneNumber: this.teacher.phoneNumber,
+      emailAddress: this.teacher.emailAddress,
+      address: this.teacher.address,
+      birthDate: this.teacher.birthDate,
+      maritalStatus: currentMaritalStatus,
+      profession: this.teacher.profession,
+      educationalQualification: this.teacher.educationalQualification,
+      qualificationDate: this.teacher.qualificationDate,
+      joiningDate: this.teacher.joiningDate,
+      outOfWork: this.teacher.outOfWork,
+      exitDate: this.teacher.exitDate,
+    });
+    this.buttonName = 'تعديل';
+  }
+
+  deleteTeacher(teacher: any) {
+    this.teacherService.deleteTeacher(teacher.id).subscribe(
+      (data) => {
+        this.data = this.data.filter((teachr) => teachr.id !== teacher.id);
+        this.deleteError = null;
       },
       (error) => {
-        this.error = error;
         console.log(error);
+
+        this.deleteError = error;
       }
     );
   }
 
-  prepareStudentData() {
-    console.log('Fetching data.....');
+  ngAfterViewInit() {
+    this.modalInstance = new Modal(this.teacherModal.nativeElement);
   }
 
-  reset() {
-    this.student = {
-      fullName: '',
-      nationalId: '',
-      motherName: '',
-      address: '',
-      motherPhoneNumber: '',
-      maritalStatus: 'أعزب',
-      periodName: '',
-      ringId: 1,
-      joiningDate: '',
-      birthDate: '',
-      fatherPhoneNumber: '',
-      fatherEmailAddress: '',
-    };
-  }
-
-  editStudent(student: any) {
-    this.student = this.cloneStudent(student);
-    console.log('Edit Student : ', student);
-  }
-
-  deleteStudent(student: any) {
-    this.studentService.deleteStudent(student.id).subscribe(
-      (data) => {
-        this.data = this.data.filter((studnt) => studnt.id !== student.id);
-        console.log(data);
-      },
-      (error) => console.log(error)
-    );
-    console.log('Delete Student : ', student);
-  }
   closeModal() {
-    // Use Bootstrap's JavaScript API to close the modal
-    const modalElement = this.studentModal.nativeElement;
-    const modal =
-      bootstrap.Modal.getInstance(modalElement) ||
-      new bootstrap.Modal(modalElement);
-
-    modal?.hide();
-    modal?.dispose(); // Dispose of the modal instance to remove the backdrop
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+      // Manually remove the backdrop
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove();
+      }
+    } else {
+      console.error('Modal instance is not initialized.');
+    }
   }
 
-  cloneStudent(student: any): any {
+  cloneTeacher(teacher: any): any {
     return {
-      fullName: student.fullName,
-      nationalId: student.nationalId,
-      motherName: student.motherName,
-      address: student.address,
-      motherPhoneNumber: student.motherPhoneNumber,
-      maritalStatus: student.maritalStatus,
-      periodName: student.periodName,
-      ringId: student.ringId,
-      joiningDate: student.joiningDate,
-      birthDate: student.birthDate,
-      fatherPhoneNumber: student.fatherPhoneNumber,
-      fatherEmailAddress: student.fatherEmailAddress,
+      id: teacher.id,
+      fullName: teacher.fullName,
+      nationalId: teacher.nationalId,
+      phoneNumber: teacher.phoneNumber,
+      address: teacher.address,
+      birthDate: teacher.birthDate,
+      maritalStatus: teacher.maritalStatus,
+      workingDate: teacher.workingDate,
+      exitDate: teacher.exitDate,
+      profession: teacher.profession,
+      qualificationDate: teacher.qualificationDate,
+      educationalQualification: teacher.educationalQualification,
+      outOfWork: teacher.outOfWork,
+      emailAddress: teacher.emailAddress,
     };
   }
 }
