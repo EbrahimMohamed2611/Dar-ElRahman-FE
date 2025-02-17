@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SidebarComponent {
   public readonly AppRoutes = AppRoutes;
-  constructor(protected authService: AuthService) {
-    // this.router.events.subscribe(event => console.log(this.router.url));
-  }
+
+  constructor(protected authService: AuthService) {}
+
 }

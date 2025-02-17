@@ -33,14 +33,6 @@ export const APP_ROUTES: Routes = [
       ),
   },
   {
-    path: AppRoutes.TEACHER,
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./components/teacher/teacher.component').then(
-        (c) => c.TeacherComponent
-      ),
-  },
-  {
     path: '',
     redirectTo: AppRoutes.LOGIN,
     pathMatch: 'full',

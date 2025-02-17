@@ -1,0 +1,373 @@
+@if(rowSelected){
+  <div class="d-flex justify-content-between details-container">
+    <!-- User Details Section -->
+  
+    <!-- user-details.component.html -->
+  
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">تفاصيل الطالب</h3>
+        <p class="d-flex justify-content-between">
+          <strong>رقم المسلسل:</strong> {{ rowSelected.id }}
+        </p>
+        <p class="d-flex justify-content-between">
+          <strong>الاسم رباعي:</strong> {{ rowSelected.fullName }}
+        </p>
+        <p class="d-flex justify-content-between">
+          <strong>الرقم القومي:</strong> {{ rowSelected.nationalId }}
+        </p>
+        <p class="d-flex justify-content-between">
+          <strong>الحالة:</strong>
+          <span
+            class="green-status"
+            [ngClass]="{
+              'green-status': rowSelected.status === 'CONNECTED',
+              'green-danger': rowSelected.status === 'STOPPED'
+            }"
+            >{{ rowSelected.status === "STOPPED" ? "منقطع" : "متصل" }}</span
+          >
+        </p>
+      </div>
+    </div>
+  
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">تفاصيل التواصل</h3>
+        <p class="card-text d-flex justify-content-between">
+          <strong>تليفون الأب:</strong> {{ rowSelected.fatherPhoneNumber }}
+        </p>
+        <p class="card-text d-flex justify-content-between">
+          <strong>تليفون الأم:</strong> {{ rowSelected.motherPhoneNumber }}
+        </p>
+        <p class="card-text d-flex justify-content-between">
+          <strong>العنوان:</strong>{{ rowSelected.address }}
+        </p>
+      </div>
+    </div>
+  
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">تفاصيل أخرى</h3>
+        <p class="card-text d-flex justify-content-between">
+          <strong>الحالة الاجتماعية:</strong> {{ rowSelected.maritalStatus }}
+        </p>
+        <p class="d-flex justify-content-between">
+          <strong>الفصل:</strong> {{ rowSelected.ring.teacherName }}
+        </p>
+        <p class="card-text d-flex justify-content-between">
+          <strong>تاريخ الالتحاق:</strong> {{ rowSelected.joiningDate }}
+        </p>
+        <p class="card-text d-flex justify-content-between">
+          <strong>تاريخ الميلاد:</strong>{{ rowSelected.birthDate }}
+        </p>
+        <p class="d-flex justify-content-between">
+          <strong>الفترة:</strong> {{ rowSelected.ring.period }}
+        </p>
+      </div>
+    </div>
+  </div>
+  }
+  <!-- Button to trigger the modal -->
+  <button
+    type="button"
+    class="details-button add-button"
+    data-bs-toggle="modal"
+    data-bs-target="#studentModal"
+  >
+    اضافة طالب جديد
+  </button>
+  
+  <!-- Modal -->
+  <div #studentModal class="modal" id="studentModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div *ngIf="error" class="alert alert-danger">
+          {{ error.error.errorDescription }}
+        </div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="studentModalLabel">تفاصيل الطالب</h5>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="onSubmit()">
+            <div class="d-flex justify-content-between">
+              <div class="mb-3" *ngIf="false">
+                <label for="id" class="form-label">المسلسل</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="id"
+                  [(ngModel)]="student.id"
+                  name="id"
+                />
+              </div>
+  
+              <div class="mb-3">
+                <label for="fullName" class="form-label">الاسم رباعى</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullName"
+                  [(ngModel)]="student.fullName"
+                  name="fullName"
+                  required
+                />
+              </div>
+  
+              <!-- الرقم القومى -->
+              <div class="mb-3">
+                <label for="nationalId" class="form-label">الرقم القومى</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nationalId"
+                  [(ngModel)]="student.nationalId"
+                  name="nationalId"
+                  required
+                />
+              </div>
+            </div>
+            <!-- الاسم رباعى -->
+  
+            <div class="d-flex justify-content-between">
+              <!-- اسم الام -->
+              <div class="mb-3">
+                <label for="motherName" class="form-label">اسم الام</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="motherName"
+                  [(ngModel)]="student.motherName"
+                  name="motherName"
+                  required
+                />
+              </div>
+  
+              <!-- تليفون الام -->
+              <div class="mb-3">
+                <label for="motherPhone" class="form-label">تليفون الام</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="motherPhone"
+                  [(ngModel)]="student.motherPhoneNumber"
+                  name="motherPhone"
+                  required
+                />
+              </div>
+            </div>
+  
+            <!-- العنوان -->
+            <div class="mb-3">
+              <label for="address" class="form-label">العنوان</label>
+              <input
+                type="text"
+                class="form-control"
+                id="address"
+                [(ngModel)]="student.address"
+                name="address"
+                required
+              />
+            </div>
+  
+            <!-- الفترة -->
+            <div class="mb-3">
+              <label for="period" class="form-label">الفترة</label>
+              <select
+                class="form-select"
+                id="period"
+                [(ngModel)]="student.periodName"
+                name="periodId"
+                required
+              >
+                <option *ngFor="let period of periods" [value]="period.name">
+                  {{ period.nameAR }}
+                </option>
+              </select>
+            </div>
+            <!-- الحالة الاجتماعية -->
+            <div class="mb-3">
+              <label for="maritalStatus" class="form-label"
+                >الحالة الاجتماعية</label
+              >
+              <select
+                class="form-select"
+                id="maritalStatus"
+                [(ngModel)]="student.maritalStatus"
+                name="maritalStatus"
+                required
+              >
+                <option value="ORPHAN">يتيم</option>
+                <option value="DIVORCED">مُطلق</option>
+                <option value="NOT_DEFINED">غير معروف</option>
+              </select>
+            </div>
+            <!-- الفصل -->
+            <div class="mb-3">
+              <label for="class" class="form-label">الفصل</label>
+              <select
+                class="form-select"
+                id="class"
+                [(ngModel)]="student.ringId"
+                name="classId"
+                required
+              >
+                <option *ngFor="let ring of rings" [value]="ring.id">
+                  {{ ring.name }}
+                </option>
+              </select>
+            </div>
+  
+            <!-- تاريخ الالتحاق بالدار -->
+            <div class="mb-3">
+              <label for="enrollmentDate" class="form-label"
+                >تاريخ الالتحاق بالدار</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="enrollmentDate"
+                [(ngModel)]="student.joiningDate"
+                name="enrollmentDate"
+                required
+              />
+            </div>
+  
+            <!-- تاريخ الميلاد -->
+            <div class="mb-3">
+              <label for="birthDate" class="form-label">تاريخ الميلاد</label>
+              <input
+                type="date"
+                class="form-control"
+                id="birthDate"
+                [(ngModel)]="student.birthDate"
+                name="birthDate"
+                required
+              />
+            </div>
+  
+            <!-- تليفون الاب -->
+            <div class="mb-3">
+              <label for="fatherPhone" class="form-label">تليفون الاب</label>
+              <input
+                type="text"
+                class="form-control"
+                id="fatherPhone"
+                [(ngModel)]="student.fatherPhoneNumber"
+                name="fatherPhone"
+                required
+              />
+            </div>
+  
+            <!-- تليفون الاب -->
+            <div class="mb-3">
+              <label for="fatherEmailAddress" class="form-label"
+                >البريد الالكترونى للـ أب</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="fatherEmailAddress"
+                [(ngModel)]="student.fatherEmailAddress"
+                name="fatherEmailAddress"
+                required
+              />
+            </div>
+  
+            <!-- Submit Button -->
+            <!-- <button class="btn btn-primary">تسجيل</button> -->
+            <div class="modal-footer d-flex justify-content-end">
+              <div>
+                <button
+                  *ngIf="buttonName === 'إضافة'"
+                  type="submit"
+                  class="details-button"
+                >
+                  {{ buttonName }}
+                </button>
+                <button
+                  *ngIf="buttonName === 'تعديل'"
+                  type="submit"
+                  class="details-button"
+                >
+                  {{ buttonName }}
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  class="danger-button"
+                  (click)="reset()"
+                  data-bs-dismiss="modal"
+                >
+                  الغاء
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="table-container">
+    <table class="custom-table" style="text-align: center">
+      <thead class="thead-dark">
+        <tr>
+          <th>رقم المسلسل</th>
+          <th>الاسم رباعي</th>
+          <th>الرقم القومي</th>
+          <th>الحالة</th>
+          <th>الفترة</th>
+          <th>الفصل</th>
+          <th>العمليات</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(row of data; track row.id;){
+        <tr (click)="selectRow(row)">
+          <td>{{ row.id }}</td>
+          <td>{{ row.fullName }}</td>
+          <td>{{ row.nationalId }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'green-status': row.status == 'CONNECTED',
+                'danger-status': row.status === 'STOPPED'
+              }"
+              >{{ row.status === "STOPPED" ? "منقطع" : "متصل" }}</span
+            >
+          </td>
+          <td>{{ row.ring.period }}</td>
+          <td>{{ row.ring.teacherName }}</td>
+          <td>
+            <!-- <button class="btn-sm details-button" (click)="selectRow(row)">
+              التفاصيل
+            </button> -->
+            <div class="d-flex justify-content-between">
+              <button class="btn-sm details-button" (click)="selectRow(row)">
+                <i class="fa fa-eye"></i>
+                <span>التفاصيل</span>
+              </button>
+  
+              <button
+                class="btn-sm edit-button"
+                (click)="handleEditClick(row)"
+                data-bs-toggle="modal"
+                data-bs-target="#studentModal"
+              >
+                <i class="fa fa-eye"></i>
+                <span>تعديل</span>
+              </button>
+  
+              <button class="btn-sm delete-button" (click)="deleteStudent(row)">
+                <i class="fa fa-eye"></i>
+                <span>حذف</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
