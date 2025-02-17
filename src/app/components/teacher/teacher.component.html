@@ -6,7 +6,7 @@
 
   <div class="card">
     <div class="card-body">
-      <h3 class="card-title">تفاصيل الطالب</h3>
+      <h3 class="card-title">تفاصيل المدرس</h3>
       <p class="d-flex justify-content-between">
         <strong>رقم المسلسل:</strong> {{ rowSelected.id }}
       </p>
@@ -70,37 +70,39 @@
 <!-- Button to trigger the modal -->
 <button
   type="button"
-  class="details-button add-button"
+  class="btn btn-primary add-button"
   data-bs-toggle="modal"
   data-bs-target="#studentModal"
 >
-  اضافة طالب جديد
+  اضافة مدرس جديد
 </button>
 
 <!-- Modal -->
-<div #studentModal class="modal" id="studentModal">
+<div
+  #studentModal
+  class="modal fade"
+  id="studentModal"
+  tabindex="-1"
+  aria-labelledby="studentModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
-      <div *ngIf="error" class="alert alert-danger">
-        {{ error.error.errorDescription }}
-      </div>
       <div class="modal-header">
+        <div *ngIf="error" class="alert alert-danger">
+          {{ error.error.errorDescription }}
+        </div>
         <h5 class="modal-title" id="studentModalLabel">تفاصيل الطالب</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
         <form (ngSubmit)="onSubmit()">
           <div class="d-flex justify-content-between">
-            <div class="mb-3" *ngIf="false">
-              <label for="id" class="form-label">المسلسل</label>
-              <input
-                type="text"
-                class="form-control"
-                id="id"
-                [(ngModel)]="student.id"
-                name="id"
-              />
-            </div>
-
             <div class="mb-3">
               <label for="fullName" class="form-label">الاسم رباعى</label>
               <input
@@ -276,32 +278,15 @@
           <!-- Submit Button -->
           <!-- <button class="btn btn-primary">تسجيل</button> -->
           <div class="modal-footer d-flex justify-content-end">
-            <div>
-              <button
-                *ngIf="buttonName === 'إضافة'"
-                type="submit"
-                class="details-button"
-              >
-                {{ buttonName }}
-              </button>
-              <button
-                *ngIf="buttonName === 'تعديل'"
-                type="submit"
-                class="details-button"
-              >
-                {{ buttonName }}
-              </button>
-            </div>
-            <div>
-              <button
-                type="button"
-                class="danger-button"
-                (click)="reset()"
-                data-bs-dismiss="modal"
-              >
-                الغاء
-              </button>
-            </div>
+            <button type="submit" class="btn btn-primary">تسجيل</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="reset()"
+              data-bs-dismiss="modal"
+            >
+              الغاء
+            </button>
           </div>
         </form>
       </div>
@@ -310,7 +295,7 @@
 </div>
 
 <div class="table-container">
-  <table class="custom-table" style="text-align: center">
+  <table class="custom-table">
     <thead class="thead-dark">
       <tr>
         <th>رقم المسلسل</th>
@@ -323,7 +308,7 @@
       </tr>
     </thead>
     <tbody>
-      @for(row of data; track row.id;){
+      @for(row of data; track row.serial;){
       <tr (click)="selectRow(row)">
         <td>{{ row.id }}</td>
         <td>{{ row.fullName }}</td>
@@ -342,8 +327,8 @@
         <td>{{ row.ring.teacherName }}</td>
         <td>
           <!-- <button class="btn-sm details-button" (click)="selectRow(row)">
-            التفاصيل
-          </button> -->
+                التفاصيل
+              </button> -->
           <div class="d-flex justify-content-between">
             <button class="btn-sm details-button" (click)="selectRow(row)">
               <i class="fa fa-eye"></i>
@@ -352,7 +337,7 @@
 
             <button
               class="btn-sm edit-button"
-              (click)="handleEditClick(row)"
+              (click)="editStudent(row)"
               data-bs-toggle="modal"
               data-bs-target="#studentModal"
             >

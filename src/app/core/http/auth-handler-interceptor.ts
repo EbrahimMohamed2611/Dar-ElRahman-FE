@@ -1,41 +1,54 @@
-import { HTTP_INTERCEPTORS, HttpEvent } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpErrorResponse,
+  HttpEvent,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
   HttpHandler,
   HttpRequest,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthHandlerInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   intercept(
-      request: HttpRequest<any>,
-      next: HttpHandler,
+    request: HttpRequest<any>,
+    next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if(this.isPublicEndpoint(request)){
-      return next.handle(request);
-    }
-    else{
+    if (this.isPublicEndpoint(request)) {
+      return next.handle(request).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            // Token expired or invalid
+            this.authService.logout(); // Clear session and logout
+          }
+          return throwError(() => error);
+        })
+      );
+    } else {
       return next.handle(this.addRequiredHeaderProperties(request));
     }
   }
 
-  isPublicEndpoint(request: HttpRequest<any>){
-    return request.url.endsWith('/register') || request.url.endsWith('/authenticate');
+  isPublicEndpoint(request: HttpRequest<any>) {
+    return (
+      request.url.endsWith('/register') || request.url.endsWith('/authenticate')
+    );
   }
 
   private addRequiredHeaderProperties(
-      request: HttpRequest<any>,
+    request: HttpRequest<any>
   ): HttpRequest<any> {
-
     const session_token = localStorage.getItem('token');
 
     let requestHeaders = {
-      headers: request.headers
-          .set('Authorization', 'Bearer ' + session_token)
+      headers: request.headers.set('Authorization', 'Bearer ' + session_token),
     };
 
     return request.clone(requestHeaders);

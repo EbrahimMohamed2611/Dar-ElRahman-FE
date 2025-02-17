@@ -24,6 +24,13 @@ export class StudentService {
     );
   }
 
+  updateStudent(student: any): Observable<any> {
+    return this.http.put(
+      `${environment.memoApiUrl}${BackendEndpoints.student}`,
+      student
+    );
+  }
+
   deleteStudent(studentId: number): Observable<any> {
     return this.http.delete(
       `${environment.memoApiUrl}${BackendEndpoints.student}/${studentId}`

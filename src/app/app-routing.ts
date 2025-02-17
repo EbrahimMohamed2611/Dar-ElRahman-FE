@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import {AppRoutes} from "./constants/app-routes";
-import {authGuard} from "./core/guards/auth-guard";
-import {publicGuard} from "./core/guards/public-guard";
+import { AppRoutes } from './constants/app-routes';
+import { authGuard } from './core/guards/auth-guard';
+import { publicGuard } from './core/guards/public-guard';
 
 export const APP_ROUTES: Routes = [
   {
@@ -10,7 +10,7 @@ export const APP_ROUTES: Routes = [
     loadComponent: () =>
       import('./components/registration/registration.component').then(
         (c) => c.RegistrationComponent
-      )
+      ),
   },
   {
     path: AppRoutes.LOGIN,
@@ -33,9 +33,17 @@ export const APP_ROUTES: Routes = [
       ),
   },
   {
+    path: AppRoutes.TEACHER,
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./components/teacher/teacher.component').then(
+        (c) => c.TeacherComponent
+      ),
+  },
+  {
     path: '',
     redirectTo: AppRoutes.LOGIN,
     pathMatch: 'full',
   },
-  { path: '**', redirectTo: AppRoutes.LOGIN , pathMatch: 'full' },
+  { path: '**', redirectTo: AppRoutes.LOGIN, pathMatch: 'full' },
 ];

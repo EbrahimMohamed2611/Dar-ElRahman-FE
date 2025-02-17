@@ -1,15 +1,23 @@
 import { Component } from '@angular/core';
-import {RouterOutlet} from "@angular/router";
+import { RouterOutlet } from '@angular/router';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, CommonModule],
 })
 export class AppComponent {
   title = 'Dar-ElRahman';
+  isLoggedIn$: Observable<boolean> | undefined;
+
+  constructor() {
+    // this.router.events.subscribe((event) => console.log(this.router.url));
+  }
+
 
   // get paginatedData() {
   //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
