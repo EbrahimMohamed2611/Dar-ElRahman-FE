@@ -16,4 +16,24 @@ export class TeacherService {
       `${environment.memoApiUrl}${BackendEndpoints.teacher}`
     );
   }
+
+  deleteTeacher(teacherId: number): Observable<any> {
+    return this.http.delete(
+      `${environment.memoApiUrl}${BackendEndpoints.teacher}/${teacherId}`
+    );
+  }
+
+  addTeacher(teacher: any): Observable<any> {
+    return this.http.post(
+      `${environment.memoApiUrl}${BackendEndpoints.teacher}`,
+      teacher
+    );
+  }
+
+  updateTeacher(teacher: any): Observable<any> {
+    return this.http.put(
+      `${environment.memoApiUrl}${BackendEndpoints.teacher}`,
+      teacher
+    );
+  }
 }
