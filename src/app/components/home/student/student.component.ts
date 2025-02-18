@@ -1,11 +1,19 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TeacherService } from 'src/app/services/teacher/teacher.service';
 import { StudentService } from 'src/app/services/student/student.service';
 import { RingService } from 'src/app/services/ring/ring.service';
 import * as bootstrap from 'bootstrap'; // Import Bootstrap
 import { Modal } from 'bootstrap';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-student',
@@ -18,7 +26,6 @@ export class StudentComponent implements OnInit {
   @ViewChild('studentModal', { static: false }) studentModal!: ElementRef;
   private modalInstance: Modal | null = null;
   buttonName = 'إضافة';
-  data: any[] = [];
   student = {
     id: '',
     fullName: '',
@@ -42,14 +49,36 @@ export class StudentComponent implements OnInit {
     { name: 'Extended', nameAR: 'ممتدة' },
     { name: 'NOT_DEFINED', nameAR: 'غير معروف' },
   ];
-  teachers: any[] = [];
-  rings: any[] = [];
+  data = signal<any[] | undefined>(undefined);
+  teachers = signal<any[] | undefined>(undefined);
+  rings = signal<any[] | undefined>(undefined);
 
   rowSelected: any;
+
+  constructor(
+    private teacherService: TeacherService,
+    private ringService: RingService,
+    private studentService: StudentService,
+    protected loadingService: LoadingService
+  ) {
+    effect(() => {
+      if (this.data() && this.teachers() && this.rings())
+        this.loadingService.stopLoading();
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadingService.startLoading();
+    this.getAllStudents();
+    this.gatAllRings();
+    this.getAllTeachers();
+  }
+
   ngAfterViewInit() {
     // Initialize the modal instance
     this.modalInstance = new Modal(this.studentModal.nativeElement);
   }
+
   closeModal() {
     if (this.modalInstance) {
       this.modalInstance.hide();
@@ -62,23 +91,12 @@ export class StudentComponent implements OnInit {
       console.error('Modal instance is not initialized.');
     }
   }
-  constructor(
-    private teacherService: TeacherService,
-    private ringService: RingService,
-    private studentService: StudentService
-  ) {}
-
-  ngOnInit(): void {
-    this.getAllStudents();
-    this.gatAllRings();
-    this.getAllTeachers();
-  }
 
   private getAllStudents() {
     this.studentService.getAllStudent().subscribe(
       (response: any) => {
-        this.data = response.data;
-        this.rowSelected = this.data[0];
+        this.data.set(response.data);
+        this.rowSelected = this.data()?.[0];
       },
       (error) => {
         console.error('Student failed', error);
@@ -93,7 +111,7 @@ export class StudentComponent implements OnInit {
   private getAllTeachers() {
     this.teacherService.getAllTeachers().subscribe(
       (response) => {
-        this.teachers = response.data;
+        this.teachers.set(response.data);
       },
       (error) => {
         console.error('Teachers failed', error);
@@ -104,7 +122,7 @@ export class StudentComponent implements OnInit {
   private gatAllRings() {
     this.ringService.getAllRings().subscribe(
       (response) => {
-        this.rings = response.data;
+        this.rings.set(response.data);
       },
       (error) => {
         console.error('Rings failed', error);
@@ -113,6 +131,7 @@ export class StudentComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loadingService.startLoading();
     if (this.buttonName === 'إضافة') {
       this.studentService.addStudent(this.student).subscribe(
         (response) => {
@@ -121,6 +140,7 @@ export class StudentComponent implements OnInit {
         },
         (error) => {
           this.error = error;
+          this.loadingService.stopLoading();
         }
       );
     } else {
@@ -169,15 +189,28 @@ export class StudentComponent implements OnInit {
       this.student.maritalStatus = 'DIVORCED';
     else this.student.maritalStatus = 'NOT_DEFINED';
 
+    if (this.student.status === 'متصل')
+      this.student.status = 'CONNECTED';
+    else
+      this.student.status = 'STOPPED';
+
     this.buttonName = 'تعديل';
   }
 
   deleteStudent(student: any) {
+    this.loadingService.startLoading();
     this.studentService.deleteStudent(student.id).subscribe(
       (data) => {
-        this.data = this.data.filter((studnt) => studnt.id !== student.id);
+        let filteredData = this.data()?.filter(
+          (studnt) => studnt.id !== student.id
+        );
+        this.data.set(filteredData);
+        this.loadingService.stopLoading();
       },
-      (error) => console.log(error)
+      (error) => {
+        console.log(error);
+        this.loadingService.stopLoading();
+      }
     );
   }
 

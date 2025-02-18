@@ -31,3 +31,7 @@
   <p class="forgot-password">نسيت كلمة المرور</p>
   <p class="register"> ليس لديك حساب؟<a [routerLink]="['/', AppRoutes.REGISTRATION]" class="register-link"> قم بالتسجيل</a></p>
 </div>
+
+@if(loadingService.isLoading){
+  <app-loading />
+}

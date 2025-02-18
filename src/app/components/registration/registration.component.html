@@ -69,3 +69,7 @@
   </form>
   <p class="login my-3">لديك حساب؟<a [routerLink]="['/', AppRoutes.LOGIN]" class="login-link"> تسجيل الدخول</a></p>
 </div>
+
+@if(loadingService.isLoading){
+  <app-loading />
+}
