@@ -66,11 +66,7 @@
   transition: background-color 0.3s ease; /* Smooth hover transition */
 }
 
-.butn {
-  height: 40px;
-}
-
-.add-button {
+.add-button{
   margin-top: 10px;
   margin-bottom: 20px;
 }
@@ -135,7 +131,6 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  height: 40px;
 }
 
 .details-button:hover {
@@ -145,7 +140,8 @@
   background-color: #cc3e3e; /* Darker blue on hover */
 }
 
-.details-container {
+
+.details-container{
   margin-top: 30px;
 }
 

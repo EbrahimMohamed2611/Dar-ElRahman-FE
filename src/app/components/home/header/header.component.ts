@@ -12,7 +12,7 @@ export class HeaderComponent implements OnInit {
     const session_token = localStorage.getItem('token');
     console.log(session_token ? this.decodeJwt(session_token) : 'Empty');
     this.currentUser = session_token
-      ? this.decodeJwt(session_token).sub
+      ? this.decodeJwt(session_token).FullName
       : this.currentUser;
   }
   decodeJwt(token: string): any {

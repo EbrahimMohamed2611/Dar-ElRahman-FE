@@ -38,10 +38,10 @@
         <strong>الحالة الاجتماعية:</strong> {{ rowSelected.maritalStatus }}
       </p>
       <p class="card-text d-flex justify-content-between">
-        <strong>تاريخ بداية العمل:</strong> {{ rowSelected.joiningDate }}
+        <strong>تاريخ الانضمام:</strong> {{ rowSelected.joiningDate }}
       </p>
       <p class="card-text d-flex justify-content-between">
-        <strong>تاريخ نهاية العمل:</strong> {{ rowSelected.exitDate }}
+        <strong>تاريخ الانتهاء:</strong> {{ rowSelected.exitDate }}
       </p>
     </div>
   </div>
@@ -98,7 +98,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <div *ngIf="error" class="alert alert-danger">
-          {{ error.error.errorDescription }}
+          {{ error }}
         </div>
         <h5 class="modal-title" id="teachertModalLabel">تفاصيل المدرس</h5>
       </div>
@@ -359,7 +359,7 @@
               'green-status': row.outOfWork == false,
               'danger-status': row.outOfWork === true
             }"
-            >{{ row.outOfWork === false ? "نعم" : "لا" }}</span
+            >{{ row.outOfWork === false ? "لا" : "نعم" }}</span
           >
         </td>
         <td>{{ row.profession }}</td>

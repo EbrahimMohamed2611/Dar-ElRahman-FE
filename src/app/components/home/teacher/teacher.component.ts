@@ -14,7 +14,7 @@ import { Modal } from 'bootstrap';
   selector: 'app-teacher',
   imports: [NgClass, FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './teacher.component.html',
-  styleUrl: './teacher.component.css',
+  styleUrl: './teacher.component.scss',
 })
 export class TeacherComponent implements OnInit {
   @ViewChild('teachertModal') teacherModal!: ElementRef; // Reference to the modal
@@ -36,7 +36,7 @@ export class TeacherComponent implements OnInit {
     profession: '',
     qualificationDate: '',
     educationalQualification: '',
-    outOfWork: '',
+    outOfWork: false,
     emailAddress: '',
   };
   error: any;
@@ -111,7 +111,10 @@ export class TeacherComponent implements OnInit {
           this.closeModal();
         },
         (error) => {
-          this.error = error;
+          error.error.apiValidationErrorSet.map(
+            (err: { field: string; message: string }) =>
+              err.field + ': ' + err.message
+          );
         }
       );
     } else {
@@ -123,7 +126,10 @@ export class TeacherComponent implements OnInit {
           this.closeModal();
         },
         (error) => {
-          this.error = error;
+          error.error.apiValidationErrorSet.map(
+            (err: { field: string; message: string }) =>
+              err.field + ': ' + err.message
+          );
         }
       );
     }
@@ -143,7 +149,7 @@ export class TeacherComponent implements OnInit {
       profession: '',
       educationalQualification: '',
       qualificationDate: '',
-      outOfWork: '',
+      outOfWork: false,
       emailAddress: '',
     };
   }

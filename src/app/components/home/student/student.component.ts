@@ -18,9 +18,9 @@ import { LoadingService } from 'src/app/services/loading.service';
 @Component({
   selector: 'app-student',
   standalone: true,
+  imports: [NgClass, FormsModule, CommonModule],
   templateUrl: './student.component.html',
   styleUrls: ['./student.component.scss'],
-  imports: [NgClass, FormsModule, CommonModule],
 })
 export class StudentComponent implements OnInit {
   @ViewChild('studentModal', { static: false }) studentModal!: ElementRef;
@@ -150,7 +150,10 @@ export class StudentComponent implements OnInit {
           this.closeModal();
         },
         (error) => {
-          this.error = error;
+          this.error = error.error.apiValidationErrorSet.map(
+            (err: { field: string; message: string }) =>
+              err.field + ': ' + err.message
+          );
         }
       );
     }
@@ -188,11 +191,6 @@ export class StudentComponent implements OnInit {
     else if (this.student.maritalStatus === 'مُطلق')
       this.student.maritalStatus = 'DIVORCED';
     else this.student.maritalStatus = 'NOT_DEFINED';
-
-    if (this.student.status === 'متصل')
-      this.student.status = 'CONNECTED';
-    else
-      this.student.status = 'STOPPED';
 
     this.buttonName = 'تعديل';
   }

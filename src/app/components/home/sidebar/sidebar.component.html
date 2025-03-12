@@ -17,17 +17,11 @@
     <h2>دار عبد الرحمن</h2>
   </div>
   <ul class="menu">
-    <li
-      routerLinkActive="activeLink"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
-      <a [routerLink]="['/', AppRoutes.STUDENT]">قائمة الكتاب</a>
+    <li routerLinkActive="activeLink">
+      <a [routerLink]="['/home/', AppRoutes.STUDENT]">قائمة الكتاب</a>
     </li>
-    <li
-      routerLinkActive="activeLink"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
-      <a [routerLink]="['/', AppRoutes.TEACHER]">قائمة الموظفين</a>
+    <li routerLinkActive="activeLink">
+      <a [routerLink]="['/home/', AppRoutes.TEACHER]">قائمة الموظفين</a>
     </li>
     <li><a href="#">قائمة الغياب</a></li>
     <li><a href="#">موعد سؤال القرآن</a></li>

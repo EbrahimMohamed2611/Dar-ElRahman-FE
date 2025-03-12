@@ -73,6 +73,7 @@
   class="details-button add-button"
   data-bs-toggle="modal"
   data-bs-target="#studentModal"
+  (click)="reset()"
 >
   اضافة طالب جديد
 </button>
@@ -81,8 +82,8 @@
 <div #studentModal class="modal" id="studentModal">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div *ngIf="error" class="alert alert-danger">
-        {{ error.error.errorDescription }}
+      <div *ngIf="error" class="alert alert-danger m-3">
+        {{ error }}
       </div>
       <div class="modal-header">
         <h5 class="modal-title" id="studentModalLabel">تفاصيل الطالب</h5>
@@ -203,9 +204,7 @@
           </div>
           <!-- الحالة -->
           <div class="mb-3">
-            <label for="maritalStatus" class="form-label"
-              >الحالة</label
-            >
+            <label for="maritalStatus" class="form-label">الحالة</label>
             <select
               class="form-select"
               id="status"

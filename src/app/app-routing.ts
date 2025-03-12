@@ -18,18 +18,16 @@ export const APP_ROUTES: Routes = [
     loadComponent: () =>
       import('./components/login/login.component').then(
         (c) => c.LoginComponent
-      )
+      ),
   },
   {
     path: AppRoutes.HOME,
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./components/home/home.component').then(
-        (c) => c.HomeComponent,
-      ),
+      import('./components/home/home.component').then((c) => c.HomeComponent),
     loadChildren: () =>
       import('./components/home/home-routing').then(
-        (routes) => routes.HOME_CHILDREN_ROUTES,
+        (routes) => routes.HOME_CHILDREN_ROUTES
       ),
   },
   {
