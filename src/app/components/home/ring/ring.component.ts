@@ -195,7 +195,9 @@ export class RingComponent implements OnInit {
     [MemorizationPart.three_lines]: 'ثلاثة أسطر'
   };
 
-  getArabicMemorizationPart(grade: string): string {
+  getArabicMemorizationPart(grade: string | null | undefined): string {
+    if (!grade)
+      return '';
     return this.memorizationPartMap[grade] || grade;
   }
 

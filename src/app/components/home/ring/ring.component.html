@@ -204,7 +204,7 @@
         <td>{{ row.name }}</td>
         <td>{{ row.studentCount }}</td>
         <td>{{ row.period === Period.first ? 'أولى' : (row.period === Period.second ? 'ثانية' : 'ممتدة') }}</td>
-        <td>{{ row.memorizationPart }}</td>
+        <td>{{ getArabicMemorizationPart(row.memorizationPart) }}</td>
         <td>{{ row.teacherName }}</td>
         <td>
           <div class="d-flex justify-content-between">
